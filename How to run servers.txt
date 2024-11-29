@@ -1,0 +1,23 @@
+mkdir backend
+cd backend
+npm init -y
+npm install express
+npm install cors
+
+following comments are for user to create new project using website, first open terminal to and "cd /d" to your project folder and use "npm start" to open the website
+then open another terminal to cd /d to your backend (where server.js is located) and type node server.js
+这个是能让用户创建新的project所必需的，要和npm start一起运作，就是开两个terminal一起跑
+
+
+cd /d H:\github projects\recommendation_system\ai-matching\src\backend
+node server.js
+
+
+the following comment is for user to use the ai for candidate evaluation, first of course run the npm start to start your website and then use terminal to run the backend.py
+(you might have different file), and type python backend.py to start the local server.
+这个是能让用户用ai来找人用的，要和npm start一起运作，就是开两个terminal一起跑
+
+you need flask first, if you dont, pip install flask flask_cors
+
+cd /d H:\github projects\recommendation_system\ai-matching\src\backend
+python backend_test.py
