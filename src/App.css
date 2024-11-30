@@ -1,0 +1,44 @@
+
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+button {
+  font-size: 16px;
+  padding: 10px 20px;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+/* fancy footprint mouse tracking */
+.trail {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  /* here i use the png file for the style */
+  background: url('./assets/footprint.png') no-repeat center/contain; 
+  opacity: 0.3;
+  pointer-events: none; 
+  animation: fadeOut 2s ease-out forwards; 
+}
+
+
+@keyframes fadeOut {
+  0% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 0;
+  }
+}

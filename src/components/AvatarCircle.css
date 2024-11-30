@@ -1,0 +1,18 @@
+.avatar-circle {
+  display: inline-block;
+  text-align: center;
+  margin: 10px;
+}
+
+.avatar-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+}
+
+.avatar-name {
+  margin-top: 5px;
+  font-size: 0.9rem;
+  color: #ffffff;
+}

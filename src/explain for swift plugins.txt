@@ -1,0 +1,8 @@
+npm install swiper
+Carousel/Slider 组件
+
+    这些组件用于展示多个内容页面（如图像、卡片等），用户可以通过左右滑动或点击箭头按钮来浏览。
+    常用的库和工具：
+        Swiper.js：非常流行的 JavaScript 库，可以轻松实现响应式和交互性强的滑块效果。
+        Slick Slider：另一个受欢迎的库，可以快速创建轮播图效果。
+        React Slick：Slick 的 React 版本，用于 React 项目中。

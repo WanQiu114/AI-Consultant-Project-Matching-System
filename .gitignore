@@ -1,0 +1,5 @@
+/src/backend/node_modules
+/src/backend/candidate_ids.npy
+src/backend/candiate_data.csv
+/src/backend/embeddings.npy
+/src/backend/knn_index.joblib

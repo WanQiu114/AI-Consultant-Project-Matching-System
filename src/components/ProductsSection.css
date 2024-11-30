@@ -1,0 +1,144 @@
+.products-section {
+  padding: 100px 0;
+  background-color: #f5f5f5; 
+  text-align: center;
+}
+
+.products-heading {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #2b3e50; 
+}
+
+.products-subheading {
+  font-size: 1.5rem;
+  color: #2b3e50;
+  margin-top: 20px;
+}
+
+.products-container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.product-card {
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transition: transform 0.3s ease;
+  position: relative;
+}
+
+.product-card:hover {
+  transform: translateY(-10px);
+}
+
+.product-image {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.product-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2b3e50;
+  margin-bottom: 10px;
+}
+
+.product-description {
+  font-size: 1.2rem;
+  color: #2b3e50;
+}
+
+.view-detail-button {
+  padding: 15px 30px;
+  background-color: #2b3e50;
+  color: #ffffff;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  position: relative;
+  display: block;
+  margin: 20px auto;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.view-detail-button:hover {
+  background-color: #1f2e3d;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: #2b3e50;
+}
+
+.swiper-pagination-bullet {
+  background: #2b3e50;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.product-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%; 
+  max-width: 900px; 
+  max-height: 80vh; 
+  background: #fff;
+  padding: 40px; 
+  border-radius: 15px;
+  outline: none;
+  z-index: 1000; 
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  overflow-y: auto; 
+}
+
+.product-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7); 
+  z-index: 999; 
+}
+
+.close-modal-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.close-modal-button:hover {
+  color: #ff6b6b;
+}
+
+
+.product-modal::-webkit-scrollbar {
+  width: 10px;
+}
+
+.product-modal::-webkit-scrollbar-thumb {
+  background-color: #cccccc;
+  border-radius: 5px;
+}
+
+.product-modal::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}

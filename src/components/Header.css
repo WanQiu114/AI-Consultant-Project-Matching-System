@@ -1,0 +1,137 @@
+
+.header {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
+  background: linear-gradient(135deg, #ffffff, #f0f0f0);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid #e0e0e0;
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+/* it will always have a header bar when you scroll down and up */
+.header-scrolled {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  background: white;
+  padding: 10px 30px;
+  border-radius: 50px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+
+.logo {
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #2b3e50;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  transition: color 0.3s ease;
+  margin-right: 30px;
+}
+
+.logo:hover {
+  color: #0077b6;
+}
+
+
+.nav {
+  display: flex;
+  align-items: center;
+  white-space: nowrap; 
+}
+
+.nav ul {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex-wrap: nowrap;
+  gap: 20px;
+}
+
+.nav-item {
+  margin-right: 40px;
+  font-size: 1rem;
+  color: #2b3e50;
+  font-family: 'Arial', Helvetica, 'Open Sans', sans-serif;
+  position: relative;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.nav-item:hover {
+  color: #005f73;
+}
+
+
+.dropdown-arrow {
+  font-size: 0.8rem;
+  margin-left: 5px;
+  transition: transform 0.3s ease;
+}
+
+.nav-item:hover .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+
+.project-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0; 
+  width: 0; 
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  padding: 20px; 
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  display: flex;
+  justify-content: space-evenly; 
+  flex-wrap: wrap; 
+}
+
+
+.project-card {
+  flex: 0 1 280px; 
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px; 
+  margin: 10px; 
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+
+
+.project-card h4 {
+  margin: 0 0 10px 0;
+  color: #0077b6; 
+}
+
+.project-card p {
+  margin: 5px 0;
+  font-size: 0.9rem;
+  color: #5f6368; 
+}
+
+
+.nav ul {
+  flex-wrap: nowrap; 
+  gap: 20px; 
+}
+
+.nav {
+  white-space: nowrap; 
+}
