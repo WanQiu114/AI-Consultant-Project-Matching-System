@@ -53,7 +53,8 @@ const Header = () => {
       duration: '8 months',
       location: 'Paris',
       budget: '20 bucks',
-    }];
+    }
+,{ id: 'G', name: 'undefined', client: 'Client G', duration: '1 year', city: 'United states', Budget: '800000' }];
 
   const switchLanguage = (lang) => {
     setLanguage(lang);

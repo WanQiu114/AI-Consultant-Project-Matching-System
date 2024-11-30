@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const fs = require('fs');
+const fs = require('fs').promises; // Use fs.promises for async/await
 const path = require('path');
 
 const app = express();
@@ -8,203 +8,213 @@ app.use(cors());
 app.use(express.json());
 
 const detailPagesPath = path.join(__dirname, '..', 'detailPages');
-const productsSectionPath = path.join(__dirname, '..','components', 'ProductsSection.js');
-const headerPath = path.join(__dirname, '..','components', 'Header.js');
+const productsSectionPath = path.join(__dirname, '..', 'components', 'ProductsSection.js');
+const headerPath = path.join(__dirname, '..', 'components', 'Header.js');
+let completeResult = {};
 
+// Ensure the directory exists
+fs.mkdir(detailPagesPath, { recursive: true }).catch(console.error);
 
-if (!fs.existsSync(detailPagesPath)) {
-  fs.mkdirSync(detailPagesPath);
-}
-
-app.post('/api/createProjectDetail', (req, res) => {
+app.post('/api/createProjectDetail', async (req, res) => {
   const { pname, description, duration, location, budget } = req.body;
 
-  // file naming, it goes from A - Z
-  const existingFiles = fs.readdirSync(detailPagesPath);
-  const nextLetter = String.fromCharCode('A'.charCodeAt(0) + existingFiles.length);
+  try {
+    // Fetch existing files to determine the next letter
+    const existingFiles = await fs.readdir(detailPagesPath);
+    const nextLetter = String.fromCharCode('A'.charCodeAt(0) + existingFiles.length);
 
-  // follow the demo content structure
-  const newFileName = `ProductDetail${nextLetter}.js`;
-  const newFilePath = path.join(detailPagesPath, newFileName);
-  const newFileContent = `
-  import React, { useState, useRef } from 'react';
-  import './ProductDetail.css';
 
-  const ProductDetail${nextLetter} = () => {
-    const [showFindCandidatePopup, setShowFindCandidatePopup] = useState(false);
-    const [expandedRowIndex, setExpandedRowIndex] = useState(null); // Controls the expanded row index
-    const descriptionRef = useRef(null); // Reference to project description
-
-    // Show "Find Best Fit Candidate" popup
-    const handleFindCandidateClick = () => {
-      setShowFindCandidatePopup(true);
-    };
-
-    // Close "Find Best Fit Candidate" popup
-    const handleCloseFindCandidatePopup = () => {
-      setShowFindCandidatePopup(false);
-      setExpandedRowIndex(null);
-    };
-
-    // Toggle expanded row
-    const handleExpandClick = (index) => {
-      if (expandedRowIndex === index) {
-        setExpandedRowIndex(null); // If already expanded, collapse
-      } else {
-        setExpandedRowIndex(index); // Otherwise, expand
-      }
-    };
-
-    // Sample candidate data
-    const candidatesData = [
-      {
-        role: 'Software Engineer',
-        numberOfPeople: 5,
-        techStack: 'React, Node.js, Python',
-        topCandidates: ['Candidate 1', 'Candidate 2', 'Candidate 3'],
+    // Fetch team structure
+    const response = await fetch('http://192.168.2.46:5005/create_team_structure', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
-      {
-        role: 'Data Scientist',
-        numberOfPeople: 3,
-        techStack: 'Python, TensorFlow, SQL',
-        topCandidates: ['Candidate 4', 'Candidate 5', 'Candidate 6'],
-      },
-    ];
-
-    return (
-      <div className="product-detail">
-        <h1>Project Title: ${pname}</h1>
-        
-        <p ref={descriptionRef}>
-          <br />
-          <br />
-          <strong>Description:</strong> ${description}<br />
-          <strong>Duration:</strong> ${duration}<br />
-          <strong>Working Location:</strong> ${location}<br />
-          <strong>Budget:</strong> ${budget}<br />
-        </p>
-        <button onClick={handleFindCandidateClick} className="find-candidate-button">Find Best Fit Candidate</button>
-
-        {/* Find Best Fit Candidate popup */}
-        {showFindCandidatePopup && (
-          <div className="popup-overlay">
-            <div className="popup-content-small">
-              <h2>Find Best Fit Candidate</h2>
-              <div className="resource-list-container">
-                <table className="resource-table">
-                  <thead>
-                    <tr>
-                      <th>Role</th>
-                      <th>Number of People for this Role</th>
-                      <th>Tech Stack</th>
-                      <th>Top X Candidates Selected from Dataset</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {candidatesData.map((candidate, index) => (
-                      <tr key={index}>
-                        <td>{candidate.role}</td>
-                        <td>{candidate.numberOfPeople}</td>
-                        <td>{candidate.techStack}</td>
-                        <td>
-                          <button onClick={() => handleExpandClick(index)} className="expand-button">
-                            {expandedRowIndex === index ? 'Collapse' : 'Expand'}
-                          </button>
-                          {expandedRowIndex === index && (
-                            <ul className="candidate-list">
-                              {candidate.topCandidates.map((topCandidate, i) => (
-                                <li key={i}>{topCandidate}</li>
-                              ))}
-                            </ul>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <button onClick={handleCloseFindCandidatePopup} className="close-popup-button">Close</button>
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  };
-
-  export default ProductDetail${nextLetter};
-  `.trim();
-
-  // write into both productsection and header
-  fs.writeFile(newFilePath, newFileContent.trim(), (err) => {
-    if (err) {
-      console.error('Error creating project detail file:', err);
-      return res.status(500).send('Failed to create project detail file');
-    }
-    // update productsection file, so it will add to the big card section
-    const newProductEntry = `
-    {
-      id: '${nextLetter}',
-      title: '${pname}',
-      description: '${description}',
-      image: uploadedImage5, // Temporary image
-    }`;
-    // this will add to the header dropdown card
-    const newProjectEntry = `
-    {
-      id: '${nextLetter}',
-      name: '${pname}',
-      client: 'Client ${nextLetter}',
-      duration: '${duration}',
-      city: '${location}',
-      Budget: '${budget}',
-    }`;
-
-    
-    fs.readFile(productsSectionPath, 'utf8', (readErr, data) => {
-      if (readErr) {
-        console.error('Error reading ProductsSection file:', readErr);
-        return res.status(500).send('Failed to read ProductsSection file');
-      }
-
-  
-      const updatedProductsSectionData = data.replace(
-        /(const products = \[)([\s\S]*?)(\];)/,
-        `$1$2,${newProductEntry}$3`
-      );
-
-   
-      fs.writeFile(productsSectionPath, updatedProductsSectionData, 'utf8', (writeErr) => {
-        if (writeErr) {
-          console.error('Error updating ProductsSection file:', writeErr);
-          return res.status(500).send('Failed to update ProductsSection file');
-        }
-
-   
-        fs.readFile(headerPath, 'utf8', (headerReadErr, headerData) => {
-          if (headerReadErr) {
-            console.error('Error reading Header file:', headerReadErr);
-            return res.status(500).send('Failed to read Header file');
-          }
-
-          const updatedHeaderData = headerData.replace(
-            /(const projects = \[)([\s\S]*?)(\];)/,
-            `$1$2,${newProjectEntry}$3`
-          );
-
-          
-          fs.writeFile(headerPath, updatedHeaderData, 'utf8', (headerWriteErr) => {
-            if (headerWriteErr) {
-              console.error('Error updating Header file:', headerWriteErr);
-              return res.status(500).send('Failed to update Header file');
-            }
-
-            console.log('Project detail file, ProductsSection, and Header updated successfully:', newFileName);
-            res.status(200).send('Project detail file, ProductsSection, and Header updated successfully');
-          });
-        });
-      });
+      body: JSON.stringify(req.body),
     });
-  });
+
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    let reader = response.body.getReader();
+    let decoder = new TextDecoder('utf-8');
+    let result = '';
+
+    async function read() {
+      const { done, value } = await reader.read();
+      if (done) return result;
+      result += decoder.decode(value, { stream: true });
+      return read();
+    }
+
+    completeResult = await read();
+    completeResult = JSON.parse(completeResult); // Parse the JSON response
+      // Serialize `completeResult` safely for embedding in JavaScript
+    let  serializedCompleteResult = JSON.stringify(completeResult, null, 2);
+   
+    const req_candidates = {"roles_input":JSON.parse(serializedCompleteResult).team}
+    const response_get_Candidates = await fetch('http://192.168.2.46:5005/get_candidates', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(req_candidates),
+    });
+     reader = response_get_Candidates.body.getReader();
+     decoder = new TextDecoder('utf-8');
+     result = '';
+
+
+    let completeGetCandidateResult = await read();
+    completeGetCandidateResult = JSON.parse(completeGetCandidateResult); // Parse the JSON response
+      // Serialize `completeResult` safely for embedding in JavaScript
+    const serializedcompleteGetCandidateResult = JSON.stringify(completeGetCandidateResult, null, 2);
+    const newFileName = `ProductDetail${nextLetter}.js`;
+    const newFilePath = path.join(detailPagesPath, newFileName);
+
+    // New file content with template literals
+    const newFileContent = `
+      import React, { useState, useRef } from 'react';
+      import './ProductDetail.css';
+
+      const ProductDetail${nextLetter} = () => {
+        const [showFindCandidatePopup, setShowFindCandidatePopup] = useState(false);
+        const [expandedRowIndex, setExpandedRowIndex] = useState(null);
+        const descriptionRef = useRef(null);
+        const headers = ['role', 'skills', 'quantity'];
+        const completeResult =${serializedCompleteResult};
+        const serializedcompleteGetCandidateResult = ${serializedcompleteGetCandidateResult};
+        const handleFindCandidateClick = () => setShowFindCandidatePopup(true);
+        const handleCloseFindCandidatePopup = () => {
+          setShowFindCandidatePopup(false);
+          setExpandedRowIndex(null);
+        };
+
+        const handleExpandClick = (index) => {
+          setExpandedRowIndex(expandedRowIndex === index ? null : index);
+        };
+
+        
+
+        return (
+          <div className="product-detail">
+            <h1>Project Title: ${pname}</h1>
+            <p ref={descriptionRef}>
+              <br />
+              <strong>Description:</strong> ${description}<br />
+              <strong>Duration:</strong> ${duration}<br />
+              <strong>Working Location:</strong> ${location}<br />
+              <strong>Budget:</strong> ${budget}<br />
+            </p>
+            <table border="1" cellPadding="5">
+              <thead>
+                <tr>
+                  {headers.map((header, index) => <th key={index}>{header.toUpperCase()}</th>)}
+                </tr>
+              </thead>
+              <tbody>
+                {completeResult.team.map((row, rowIndex) => (
+                  <tr key={rowIndex}>
+                    {headers.map((header, cellIndex) => <td key={cellIndex}>{row[header]}</td>)}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <button onClick={handleFindCandidateClick} className="find-candidate-button">Find Best Fit Candidate</button>
+
+            {showFindCandidatePopup && (
+              <div className="popup-overlay">
+                <div className="popup-content-small">
+                  <h2>Find Best Fit Candidate</h2>
+    <div>
+      {Object.keys(serializedcompleteGetCandidateResult).map((role, roleIndex) => (
+        <div key={roleIndex}>
+          <h2>{role}</h2>
+          <table border="1" cellPadding="5">
+            <thead>
+              <tr>
+                <th>Email</th>
+                <th>Experience (Years)</th>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Score</th>
+                <th>Skills</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {serializedcompleteGetCandidateResult[role].map((candidate, index) => (
+                <tr key={index}>
+                  <td>{candidate.email}</td>
+                  <td>{candidate.experience_years}</td>
+                  <td>{candidate.first_name} {candidate.last_name}</td>
+                  <td>{candidate.phone}</td>
+                  <td>{candidate.score}</td>
+                  <td>{candidate.skills.split('][').map((skillSet, i) => (
+                    <ul key={i}>
+                      {skillSet.replace(/[\[\]']/g, '').split(', ').map((skill, j) => (
+                        <li key={j}>{skill}</li>
+                      ))}
+                    </ul>
+                  ))}</td>
+                  <td>
+                    <button onClick={() => handleExpandClick(index)} className="expand-button">
+                      {expandedRowIndex === index ? 'Collapse' : 'Expand'}
+                    </button>
+                    {expandedRowIndex === index && (
+                      <ul className="candidate-list">
+                        {candidate.skills.split('][')[1].replace(/[\[\]']/g, '').split(', ').map((topSkill, i) => (
+                          <li key={i}>{topSkill}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ))}
+    </div>
+                  <button onClick={handleCloseFindCandidatePopup} className="close-popup-button">Close</button>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      };
+
+      export default ProductDetail${nextLetter};
+    `.trim();
+
+    // Write the new file
+    await fs.writeFile(newFilePath, newFileContent);
+
+    // Update ProductsSection.js
+    const productsSectionData = await fs.readFile(productsSectionPath, 'utf8');
+    const updatedProductsSectionData = productsSectionData.replace(
+      /(const products = \[)([\s\S]*?)(\];)/,
+      `$1$2,${`{ id: '${nextLetter}', title: '${pname}', description: '${description}', image: uploadedImage5 }`}$3`
+    );
+    await fs.writeFile(productsSectionPath, updatedProductsSectionData);
+
+    // Update Header.js
+    const headerData = await fs.readFile(headerPath, 'utf8');
+    const updatedHeaderData = headerData.replace(
+      /(const projects = \[)([\s\S]*?)(\];)/,
+      `$1$2,${`{ id: '${nextLetter}', name: '${pname}', client: 'Client ${nextLetter}', duration: '${duration}', city: '${location}', Budget: '${budget}' }`}$3`
+    );
+    await fs.writeFile(headerPath, updatedHeaderData);
+
+    console.log('Files updated successfully:', newFileName);
+    res.status(200).send('Project detail file, ProductsSection, and Header updated successfully');
+
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).send('Failed to process request');
+  }
 });
 
 const PORT = process.env.PORT || 5000;

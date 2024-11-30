@@ -7,10 +7,9 @@ function AddProjectSection() {
     duration: '',
     location: '',
     budget: '',
-    
-
   });
-
+ 
+  const project_structure = {}
   const [showPopup, setShowPopup] = useState(false); 
 
   const handleChange = (e) => {
@@ -48,16 +47,15 @@ function AddProjectSection() {
     } catch (error) {
       console.error('Error:', error);
     }
+
+
   };
 
   return (
     <section className="add-project-section">
       <h2 className="add-project-heading">Add a New Project</h2>
       <form className="add-project-form" onSubmit={handleSubmit}>
-      <label>
-          Project Name:
-          <input type = "text" name="pname" value={formData.pname} onChange={handleChange} required />
-        </label>
+ 
         <label>
           Project Description:
           <textarea name="description" value={formData.description} onChange={handleChange} required />
@@ -70,7 +68,7 @@ function AddProjectSection() {
 
         <label>
           Working Location:
-          <input type="text" name="location" value={formData.location} onChange={handleChange} required />
+          <input type="text" name="location" value={formData.location} onChange={handleChange}  />
         </label>
         <label>
           Budget:
@@ -80,7 +78,11 @@ function AddProjectSection() {
 
         <button type="submit" className="submit-button">Submit Project</button>
       </form>
-
+      {Object.keys(project_structure).length > 0 && (
+        <div className='responce'>
+          {project_structure}
+        </div>
+      )}
       {showPopup && (
         <div className="popup">
           <p>Project submitted successfully!</p>

@@ -68,7 +68,8 @@ const ProductsSection = () => {
       title: 'Feature E',
       description: 'This is our product feature E, suitable for various use cases.',
       image: uploadedImage5,
-    }];
+    }
+,{ id: 'G', title: 'undefined', description: 'Crete a mobile game like a Mario. also need to have website to show how to install and play. And ranking of all players there.', image: uploadedImage5 }];
 
 
     // this is for the function of switching big card when click the left or right card 
