@@ -4,6 +4,9 @@
 
 The AI Consultant-Project Matching System is an intelligent tool designed to optimize the assignment of consultants to projects by analyzing their skills, experience, and project requirements. By leveraging artificial intelligence, this system ensures that each project gets the most suitable talent, maximizing efficiency and success rates. This project was developed during a hackathon and involves a range of modern technologies, including machine learning models and a user-friendly interface for streamlined matching.
 
+Executive Summary: https://drive.google.com/file/d/1pd4udAPHJHhZ_1dDvgVmn4BPaQ46R_Zu/view?usp=sharing
+YouTube Explanation: https://www.youtube.com/watch?v=preRyBTqDec&ab_channel=HarshithaKV
+
 ## Features
 
 Skill-Based Matching: Utilizes AI to evaluate consultants' skills, past experience, and project needs, ensuring an optimal match.
